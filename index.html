@@ -374,7 +374,7 @@
 #14 · Landing Sofofa y otros temas web
 #32 · Revision de Flujo Formulario - Licenciamiento JIRA
 #33 · Planificacion de tema de Pablo por Vacaciones.</div>
-      <div class="temas-add" id="temasAddWrap">
+      <div class="temas-add" id="temasAddWrap" style="">
         <select id="temasSelect"><option value="">Selecciona un compromiso…</option><option value="1">#1 · Envío de documento de Comisiones</option><option value="2">#2 · Construcción del script para call y validación legal</option><option value="3">#3 · Consulta de RUT</option><option value="4">#4 · Definición de priorizadas (matriz)</option><option value="5">#5 · Benchmark de aplicación de fundaciones</option><option value="6">#6 · Revisión de app de proveedores</option><option value="7">#7 · Solicitar al proveedor contacto de la experiencia de sus cli…</option><option value="8">#8 · Consulta aplicación de los proveedores existentes (Fund. Las…</option><option value="9">#9 · Consulta cómo recauda la competencia</option><option value="10">#10 · Invitación a ver proceso de donación</option><option value="11">#11 · Revisión de consentimiento con NewGO</option><option value="12">#12 · Envío de PPTO por parte de NewGO para implementación del pro…</option><option value="13">#13 · Incidencia NewGO (problema de conexión)</option><option value="14">#14 · Landing Sofofa y otros temas web</option><option value="15">#15 · Revisión de documentación de comisiones</option><option value="16">#16 · Migración de SF a Legados</option><option value="17">#17 · Seguimiento y planificación · Fase 2 de migración de SF a Le…</option><option value="18">#18 · Revisión de documentación de requerimiento en portal web</option><option value="19">#19 · Catálogo Jira</option><option value="20">#20 · Seguimiento entrega de formulario en Jira para catálogo</option><option value="21">#21 · Certificado de Ley de Donaciones</option><option value="22">#22 · Presentación de SF por parte del equipo interno de SF – CO</option><option value="23">#23 · Feedback de SF</option><option value="24">#24 · Captaciones estimará la cantidad de horas de grabación de ca…</option><option value="25">#25 · Funcionalidades documento captación</option><option value="26">#26 · Documentacion de Reglas de Comision</option><option value="27">#27 · Revision del plan estrategico - fase 6 presentada</option><option value="28">#28 · Revision de Propuesta Comercial NewGo - con Clinica ( Wendy)</option><option value="29">#29 · Planificacion de Cartas de Bienvenida y envio de estas</option><option value="30">#30 · Capacitacion de JIRA</option><option value="31">#31 · Revision de Requerimiento - WEB</option><option value="32">#32 · Revision de Flujo Formulario - Licenciamiento JIRA</option><option value="33">#33 · Planificacion de tema de Pablo por Vacaciones.</option></select>
         <button class="btn ghost" id="temasAddBtn" type="button">+ Agregar</button>
       </div>
@@ -395,7 +395,7 @@
     <p id="mMsg">Ingresa la clave para editar este tablero en tu navegador.</p>
     <input type="password" id="mInput" autocomplete="off">
     <textarea id="mArea" hidden="" spellcheck="false" readonly=""></textarea>
-    <p class="err" id="mErr">Clave incorrecta. Intenta de nuevo.</p>
+    <p class="err" id="mErr" hidden="">Clave incorrecta. Intenta de nuevo.</p>
     <div class="mbtns">
       <button class="btn ghost" id="mCancel">Cancelar</button>
       <button class="btn primary" id="mOk">Desbloquear</button>
@@ -456,8 +456,10 @@
   function saveTemas(v){ try{ localStorage.setItem(TKEY, v); }catch(e){} }
   function renderTemas(){
     var el = document.getElementById("temasBox"); if(!el) return;
-    el.contentEditable = "true";
+    el.contentEditable = editable ? "true" : "false";
     if(document.activeElement !== el) el.textContent = temas;
+    var wrap = document.getElementById("temasAddWrap");
+    if(wrap) wrap.style.display = editable ? "" : "none";
   }
   function fillTemasSelect(){
     var sel = document.getElementById("temasSelect"); if(!sel) return;
@@ -1076,10 +1078,12 @@
   try{ editable = localStorage.getItem(UKEY)==="1"; }catch(e){ editable=false; }
 
   document.getElementById("temasBox").addEventListener("blur", function(){
+    if(!editable) return;
     var v = this.textContent;
     if(v !== temas){ temas = v; saveTemas(temas); toast("Guardado"); }
   });
   document.getElementById("temasBox").addEventListener("input", function(){
+    if(!editable) return;
     temas = this.textContent; saveTemas(temas);
   });
   document.getElementById("temasAddBtn").addEventListener("click", function(){
